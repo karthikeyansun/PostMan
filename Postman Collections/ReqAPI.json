@@ -1,0 +1,340 @@
+{
+	"info": {
+		"_postman_id": "aa2161cb-8183-4b03-94c2-5d7a5626f292",
+		"name": "ReqRes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PreRequestScript Examples",
+			"item": [
+				{
+					"name": "API Authenticaiton Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3194e52b-e094-4319-84a0-6813f8b208f9",
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"var code = pm.response.status\r",
+									"console.log(jsonData)\r",
+									"\r",
+									"pm.test(\"Code \" + code)\r",
+									"\r",
+									"if(code===\"Created\"){\r",
+									"    pm.test (\"Token =======> \" +jsonData.accessToken)\r",
+									"}\r",
+									"else if(code ===\"Conflict\"){\r",
+									"    pm.test(\"Conflict ======>\" +jsonData.error)\r",
+									"}\r",
+									"else\r",
+									"{\r",
+									"    pm.test(\"Bad Request  =====> \" +jsonData.error)\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "a409ce51-4160-4ea7-becc-d1c82365ba43",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n\"clientName\": \"{{name}}\",\r\n\"clientEmail\": \"{{email}}\"\r\n\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/api-clients/"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Orders Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3194e52b-e094-4319-84a0-6813f8b208f9",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "49cee317-2d4e-4d70-9932-967832c40b9f",
+								"exec": [
+									"pm.sendRequest({\r",
+									"    url:\"https://simple-books-api.glitch.me/api-clients/\",\r",
+									"    method:'POST',\r",
+									"    header:{\r",
+									"        'Content-Type':'application/json'\r",
+									"    },\r",
+									"    body:{\r",
+									"        mode:'raw',\r",
+									"        raw:JSON.stringify(\r",
+									"            {\r",
+									"              \"clientName\": \"xxx\",\r",
+									"              \"clientEmail\": \"1xxx11112121111@email.com\"  \r",
+									"            }\r",
+									"        )\r",
+									"    }   \r",
+									"    },function(err,response){\r",
+									"          console.log(response.json())\r",
+									"          console.log(response.json().accessToken)\r",
+									"          pm.test(\"Access Token : \" +response.json().accessToken)\r",
+									"           pm.collectionVariables.set(\"authToken\",response.json().accessToken) \r",
+									"    })\r",
+									"\r",
+									"    "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "1f24744a-739f-49e9-ab4c-cd76805065e5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{authToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n\"bookId\" : \"1\",\r\n\"customerName\" : \"Karthik\"\r\n\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://simple-books-api.glitch.me/orders"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "4c8951bf-7cb0-4098-904e-9952e1b244f7"
+		},
+		{
+			"name": "SingleUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3f643bd3-9ea1-4eeb-a7a8-22820741d98f",
+						"exec": [
+							"bodyData = JSON.parse(responseBody)\r",
+							"value = bodyData.data.first_name\r",
+							"value1 = bodyData.data.last_name\r",
+							"email = bodyData.data.email\r",
+							"avatar = bodyData.data.avatar\r",
+							"\r",
+							"bodySupport = JSON.parse(responseBody)\r",
+							"url1 = bodySupport.support.url\r",
+							"\r",
+							"console.log(value)\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"First Name :\" +value)\r",
+							"pm.test(\"Last Name: \" +value1)\r",
+							"pm.test(\"Email :\" +email);\r",
+							"pm.test(\"Avatar : \"+avatar)\r",
+							"pm.test(\"URL :\" +url1)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"_postman_id": "386bfc2a-0ccd-4c16-9ecd-1a207ca5e13c",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://reqres.in/{{endpoint}}/{{value}}"
+			},
+			"response": []
+		},
+		{
+			"name": "SingleUser Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3f643bd3-9ea1-4eeb-a7a8-22820741d98f",
+						"exec": [
+							"bodyData = JSON.parse(responseBody)\r",
+							"value = bodyData.data.first_name\r",
+							"value1 = bodyData.data.last_name\r",
+							"email = bodyData.data.email\r",
+							"avatar = bodyData.data.avatar\r",
+							"\r",
+							"bodySupport = JSON.parse(responseBody)\r",
+							"url1 = bodySupport.support.url\r",
+							"\r",
+							"console.log(value)\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"First Name :\" +value)\r",
+							"pm.test(\"Last Name: \" +value1)\r",
+							"pm.test(\"Email :\" +email);\r",
+							"pm.test(\"Avatar : \"+avatar)\r",
+							"pm.test(\"URL :\" +url1)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"_postman_id": "3485ce8a-13d3-445a-9195-25658f2db170",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://reqres.in/api/users/4"
+			},
+			"response": []
+		},
+		{
+			"name": "Create User Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3f643bd3-9ea1-4eeb-a7a8-22820741d98f",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Iternation 1 passed\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"_postman_id": "e6fcc670-ff85-490b-8915-2ec326962cf2",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"\",\r\n    \"job\": \"\"\r\n}",
+					"options": {
+						"raw": {}
+					}
+				},
+				"url": "https://reqres.in/api/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Single Resource",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "23b9de17-e23b-415a-adad-9f68703abc9b",
+						"exec": [
+							"bodyData = JSON.parse(responseBody)\r",
+							"value = bodyData.data.name\r",
+							"year1 = bodyData.data.year\r",
+							"color1 = bodyData.data.color\r",
+							"pantone = bodyData.data.pantone_value\r",
+							"\r",
+							"bodySupport = JSON.parse(responseBody)\r",
+							"url1 = bodySupport.support.url\r",
+							"\r",
+							"console.log(value)\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"First Name :\" +value)\r",
+							"pm.test(\"Year: \" +year1)\r",
+							"pm.test(\"Color :\" +color1);\r",
+							"pm.test(\"Pantone : \"+pantone)\r",
+							"pm.test(\"URL :\" +url1)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"_postman_id": "572c01a0-9c1c-4667-a580-4790e7c89a10",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://reqres.in/api/unknown/2"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "9a19bf01-6ecc-436e-ac09-036a45672f9f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "ac282259-fa1e-491d-b04f-a5589df711cc",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "674d772c-7001-4a3a-b3d5-ef53409316b1",
+			"key": "pageNo",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "21406fb9-09c4-4dfe-b442-c008d0cf19b4",
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
